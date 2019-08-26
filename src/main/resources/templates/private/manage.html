@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:nl2br="https://github.com/bufferings/thymeleaf-extras-nl2br">
+<head>
+  <title>[[#{applicationName}]] - [[#{manage}]]</title>
+  <meta charset="utf-8">
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+</head>
+<body>
+<div class="ui container">
+  <div class="ui inverted menu">
+    <h2 class="item">[[#{applicationName}]] - [[#{manage}]]</h2>
+    <div class="right menu">
+      <div sec:authorize="!isAuthenticated()" class="item">
+        <a th:href="@{/login}" class="ui red basic button">[[#{login}]]</a>
+      </div>
+      <div sec:authorize="isAuthenticated()" class="item">
+        <form th:action="@{/logout}" method="post">
+          <button class="ui red basic button">[[#{logout}]]</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <h4>[[#{yourMessage}]]</h4>
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th class="two wide">[[#{message.publishDate}]]</th>
+        <th class="two wide">[[#{message.removeDate}]]</th>
+        <th class="two wide">[[#{message.status}]]</th>
+        <th class="eight wide">[[#{message.description}]]</th>
+        <th class="two wide">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="message:${userMessages}">
+        <td>[[${#temporals.format(message.publishDate, 'dd-MM-yyyy HH:mm')}]]</td>
+        <td>[[${message.removeDate == null}? #{notSet}: ${#temporals.format(message.removeDate, 'dd-MM-yyyy HH:mm')}]]</td>
+        <td>[[#{__${statusMap.get(message.status)}__}]]</td>
+        <td nl2br:text="${message.description}"></td>
+        <td>
+          <a th:if="${message.status != null and message.status == 1}" th:href="@{/manage/__${message.id}__}" class="ui mini green icon button">[[#{edit}]] <i class="edit icon"></i></a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5">
+          <a class="ui mini icon button" th:href="@{/manage/new}">[[#{newMessage}]] <i class="add circle icon"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 sec:authorize="hasAuthority('ADMIN')">[[#{messageWaitingApprove}]]</h4>
+  <table sec:authorize="hasAuthority('ADMIN')" class="ui celled table">
+    <thead>
+      <tr>
+        <th class="two wide">[[#{message.owner}]]</th>
+        <th class="two wide">[[#{message.publishDate}]]</th>
+        <th class="two wide">[[#{message.removeDate}]]</th>
+        <th class="eight wide">[[#{message.description}]]</th>
+        <th class="two wide">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="message:${waitingApproveMessages}">
+        <td>[[${message.owner}]]</td>
+        <td>[[${#temporals.format(message.publishDate, 'dd-MM-yyyy HH:mm')}]]</td>
+        <td>[[${message.removeDate == null}? #{notSet}: ${#temporals.format(message.removeDate, 'dd-MM-yyyy HH:mm')}]]</td>
+        <td nl2br:text="${message.description}"></td>
+        <td>
+          <a th:if="${message.status != null and message.status == 1}" th:href="@{/manage/__${message.id}__/approve}" class="ui mini green icon button">[[#{approve}]] <i class="edit icon"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
