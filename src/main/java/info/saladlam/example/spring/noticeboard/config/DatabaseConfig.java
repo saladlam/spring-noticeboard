@@ -15,6 +15,7 @@ public class DatabaseConfig {
 		return new EmbeddedDatabaseBuilder()
 				.setType(EmbeddedDatabaseType.H2)
 				.setName("noticeboard")
+				.setScriptEncoding("UTF-8")
 				.addScript("classpath:/sql/dbschema.sql")
 				.addScript("classpath:/sql/data.sql")
 				.build();
