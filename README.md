@@ -28,15 +28,16 @@ Data stored in embedded H2 database. Schema and data is imported when applicatio
 ## Compile and run
 Apache Maven wrapper is included, no addition package manager is necessary.
 
-### Compile
+### Compile (On Microsoft Windows)
 ```
-./mvnw package
+mvnw package
 ```
 
-### Run
+### Run (On Microsoft Windows)
 ```
-./mvnw spring-boot:run
+mvnw spring-boot:run
 ```
+Press Ctrl+C to stop.
 
 ## Account
 | Username | Password | Authorities |
@@ -74,15 +75,16 @@ Apache Maven wrapper is included, no addition package manager is necessary.
 ## コンパイルと実行
 Apache Mavenラッパーがついていて、だからパッケージマネージャが用意されなくでもいい。
 
-### コンパイルする
+### コンパイルする (Microsoft Windowsの場合)
 ```
-./mvnw package
+mvnw package
 ```
 
-### 実行する
+### 実行する (Microsoft Windowsの場合)
 ```
-./mvnw spring-boot:run
+mvnw spring-boot:run
 ```
+アプリケーションを閉じたい時、Ctrl+Cを押してください。
 
 ## アカウント
 | ユーザーネーム | パスワード | 権限 |
