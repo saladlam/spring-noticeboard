@@ -3,6 +3,7 @@ package info.saladlam.example.spring.noticeboard.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.dozer.Mapper;
@@ -25,7 +26,8 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public MessageDto findOne(long id, LocalDateTime time) {
-		Message from = this.messageRepository.findOne(id);
+		Optional<Message> optionalFrom = this.messageRepository.findById(id);
+		Message from = optionalFrom.orElse(null);
 		MessageDto to = mapper.map(from, MessageDto.class);
 		this.updateStatus(to, time);
 		return to;
@@ -74,8 +76,9 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public void approve(long id, String approvedBy, LocalDateTime time) {
-		Message message = this.messageRepository.findOne(id);
-		if (Objects.isNull(message.getApprovedBy())) {
+		Optional<Message> optionalMessage = this.messageRepository.findById(id);
+		Message message = optionalMessage.orElse(null);
+		if (Objects.nonNull(message) && Objects.isNull(message.getApprovedBy())) {
 			message.setApprovedBy(approvedBy);
 			message.setApprovedDate(time);
 			this.messageRepository.save(message);

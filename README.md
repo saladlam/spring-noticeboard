@@ -15,7 +15,7 @@ I write this application is for explain the mechanism of different component of 
 - Spring Boot 2.1.X
 - Spring MVC 5.1.X with thymeleaf 3.0.X
 - Spring Security 5.1.X
-- Spring JDBC 5.1.X
+- Spring Data JPA 2.1.X
 - Dozer 5.5.X
 
 ## Database
@@ -62,7 +62,7 @@ Press Ctrl+C to stop.
 - Spring Boot 2.1.X
 - Spring MVC 5.1.X と thymeleaf 3.0.X
 - Spring Security 5.1.X
-- Spring JDBC 5.1.X
+- Spring Data JPA 2.1.X
 - Dozer 5.5.X
 
 ## データベース

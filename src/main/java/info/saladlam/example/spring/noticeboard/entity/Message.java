@@ -2,14 +2,29 @@ package info.saladlam.example.spring.noticeboard.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Message {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable = false)
 	private LocalDateTime publishDate;
+	@Column
 	private LocalDateTime removeDate;
+	@Column(nullable = false)
 	private String owner;
+	@Column(nullable = false)
 	private String description;
+	@Column
 	private String approvedBy;
+	@Column
 	private LocalDateTime approvedDate;
 
 	public Long getId() {
