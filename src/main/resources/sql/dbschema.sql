@@ -8,15 +8,21 @@ CREATE TABLE message (
 	approved_date TIMESTAMP
 );
 
-CREATE TABLE users (
+CREATE TABLE user (
 	username VARCHAR(50) NOT NULL,
 	password VARCHAR(60) NOT NULL,
 	enabled SMALLINT,
 	PRIMARY KEY (username)
 );
 
-CREATE TABLE authorities (
+CREATE TABLE authority (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE user_authority (
 	username VARCHAR(50) NOT NULL,
-	authority VARCHAR(50) NOT NULL,
-	FOREIGN KEY (username) REFERENCES users
+	authority_id BIGINT NOT NULL,
+	FOREIGN KEY (username) REFERENCES user,
+	FOREIGN KEY (authority_id) REFERENCES authority
 );
