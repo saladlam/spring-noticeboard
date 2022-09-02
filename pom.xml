@@ -7,13 +7,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.7.RELEASE</version>
+		<version>2.6.11</version>
 		<relativePath />
 	</parent>
 
 	<groupId>info.saladlam.example</groupId>
 	<artifactId>spring-noticeboard</artifactId>
-	<version>0.11</version>
+	<version>0.12</version>
 	<name>spring-noticeboard</name>
 	<description>Spring boot example application: notice board</description>
 
