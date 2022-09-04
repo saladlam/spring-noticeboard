@@ -1,6 +1,7 @@
 package info.saladlam.example.spring.noticeboard.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Message {
 
@@ -66,6 +67,19 @@ public class Message {
 
 	public void setApprovedDate(LocalDateTime approvedDate) {
 		this.approvedDate = approvedDate;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Message)) return false;
+		Message message = (Message) o;
+		return id.equals(message.id) && publishDate.equals(message.publishDate) && Objects.equals(removeDate, message.removeDate) && owner.equals(message.owner) && description.equals(message.description) && Objects.equals(approvedBy, message.approvedBy) && Objects.equals(approvedDate, message.approvedDate);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, publishDate, removeDate, owner, description, approvedBy, approvedDate);
 	}
 
 }
