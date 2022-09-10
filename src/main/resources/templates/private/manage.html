@@ -20,6 +20,7 @@
       </div>
     </div>
   </div>
+  <div th:with="auth=${#authentication.getPrincipal()}" th:text="#{welcomeUser(${auth.name}, ${auth.username})}"></div>
   <h4 th:text="#{yourMessage}"></h4>
   <table class="ui celled table">
     <thead>

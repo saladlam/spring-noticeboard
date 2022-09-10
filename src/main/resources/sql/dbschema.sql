@@ -11,6 +11,8 @@ CREATE TABLE message (
 CREATE TABLE users (
 	username VARCHAR(50) NOT NULL,
 	password VARCHAR(60) NOT NULL,
+	name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
 	enabled SMALLINT,
 	PRIMARY KEY (username)
 );
