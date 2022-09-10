@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import info.saladlam.example.spring.noticeboard.dto.MessageDto;
+import info.saladlam.example.spring.noticeboard.dto.MessageDtoValidator;
 import info.saladlam.example.spring.noticeboard.service.MessageService;
 import info.saladlam.example.spring.noticeboard.support.CustomJava8TimeEditor;
 
@@ -50,6 +53,7 @@ public class PrivateController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		binder.setDisallowedFields("id", "owner", "approvedBy", "approvedDate", "status");
+		binder.setValidator(new MessageDtoValidator());
 		binder.registerCustomEditor(LocalDateTime.class, new CustomJava8TimeEditor<LocalDateTime>(
 				DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"), LocalDateTime::from, true));
 	}
@@ -76,7 +80,11 @@ public class PrivateController {
 	}
 
 	@PostMapping("/new/save")
-	public String saveCreateMessage(@ModelAttribute MessageDto message, BindingResult errors) {
+	public String saveCreateMessage(@Valid @ModelAttribute MessageDto message, BindingResult errors) {
+		if (errors.hasErrors()) {
+			return "redirect:/manage/new";
+		}
+
 		message.setOwner(this.getLoginName());
 		this.messageService.save(message);
 		return "redirect:/manage";
@@ -97,8 +105,12 @@ public class PrivateController {
 	}
 
 	@PostMapping("/{messageId}/save")
-	public String saveEditMessage(@PathVariable("messageId") long id, @ModelAttribute MessageDto message,
+	public String saveEditMessage(@PathVariable("messageId") long id, @Valid @ModelAttribute MessageDto message,
 			BindingResult errors) {
+		if (errors.hasErrors()) {
+			return "redirect:/manage/" + String.valueOf(id);
+		}
+
 		MessageDto originalMessage = this.messageService.findOne(id, this.getCurrentTime());
 		if (Objects.nonNull(originalMessage) && (originalMessage.getStatus() == MessageDto.WAITING_APPROVE)
 				&& originalMessage.getOwner().equals(this.getLoginName())) {
