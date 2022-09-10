@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import info.saladlam.example.spring.noticeboard.service.ApplicationDateTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,8 @@ public class PrivateController {
 
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+	private ApplicationDateTimeService timeService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -56,7 +59,7 @@ public class PrivateController {
 
 	@GetMapping
 	public String manage(Model model) {
-		List<MessageDto> userMessages = this.messageService.findByOwner(this.getLoginName(), this.getCurrentTime());
+		List<MessageDto> userMessages = this.messageService.findByOwner(this.getLoginName(), this.getCurrentLocalDateTime());
 		model.addAttribute("statusMap", statusMap);
 		model.addAttribute("userMessages", userMessages);
 
@@ -88,7 +91,7 @@ public class PrivateController {
 
 	@GetMapping("/{messageId}")
 	public String editMessage(@PathVariable("messageId") long id, Model model) {
-		MessageDto message = this.messageService.findOne(id, this.getCurrentTime());
+		MessageDto message = this.messageService.findOne(id, this.getCurrentLocalDateTime());
 		if (Objects.nonNull(message) && message.getStatus() == MessageDto.WAITING_APPROVE
 				&& message.getOwner().equals(this.getLoginName())) {
 			model.addAttribute("isEdit", true);
@@ -107,7 +110,7 @@ public class PrivateController {
 			return "redirect:/manage/" + String.valueOf(id);
 		}
 
-		MessageDto originalMessage = this.messageService.findOne(id, this.getCurrentTime());
+		MessageDto originalMessage = this.messageService.findOne(id, this.getCurrentLocalDateTime());
 		if (Objects.nonNull(originalMessage) && (originalMessage.getStatus() == MessageDto.WAITING_APPROVE)
 				&& originalMessage.getOwner().equals(this.getLoginName())) {
 			originalMessage.setPublishDate(message.getPublishDate());
@@ -123,7 +126,7 @@ public class PrivateController {
 	@GetMapping("/{messageId}/approve")
 	public String approve(@PathVariable("messageId") long id) {
 		if (this.getLoginAuthorities().contains("ADMIN")) {
-			this.messageService.approve(id, this.getLoginName(), this.getCurrentTime());
+			this.messageService.approve(id, this.getLoginName(), this.getCurrentLocalDateTime());
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
@@ -141,8 +144,8 @@ public class PrivateController {
 		return authorities.stream().map(obj -> obj.getAuthority()).collect(Collectors.toList());
 	}
 
-	private LocalDateTime getCurrentTime() {
-		return LocalDateTime.now();
+	private LocalDateTime getCurrentLocalDateTime() {
+		return timeService.getCurrentLocalDateTime();
 	}
 
 }

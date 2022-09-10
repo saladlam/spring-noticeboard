@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import info.saladlam.example.spring.noticeboard.repository.MessageRepository;
+import info.saladlam.example.spring.noticeboard.service.ApplicationDateTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,10 +21,12 @@ public class PublicController {
 
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+	private ApplicationDateTimeService timeService;
 
 	@GetMapping
 	public String index(Model model) {
-		List<MessageDto> messages = messageService.findPublished(this.getCurrentTime());
+		List<MessageDto> messages = messageService.findPublished(this.getCurrentLocalDateTime());
 		model.addAttribute("messages", messages);
 		return "public/index";
 	}
@@ -37,8 +41,8 @@ public class PublicController {
 		return "public/login";
 	}
 
-	private LocalDateTime getCurrentTime() {
-		return LocalDateTime.now();
+	private LocalDateTime getCurrentLocalDateTime() {
+		return timeService.getCurrentLocalDateTime();
 	}
 
 }

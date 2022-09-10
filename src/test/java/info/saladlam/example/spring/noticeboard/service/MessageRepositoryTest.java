@@ -3,6 +3,7 @@ package info.saladlam.example.spring.noticeboard.service;
 import javax.sql.DataSource;
 
 import info.saladlam.example.spring.noticeboard.entity.Message;
+import info.saladlam.example.spring.noticeboard.support.Helper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import info.saladlam.example.spring.noticeboard.repository.MessageRepository;
 
@@ -29,10 +28,7 @@ public class MessageRepositoryTest {
 
 		@Bean
 		public DataSource testDataSource() {
-			return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).setName("noticeboard")
-					.setScriptEncoding("UTF-8").addScript("classpath:/sql/dbschema.sql")
-					.addScript("classpath:/sql/messagerepositorytest.sql")
-					.build();
+			return Helper.getEmbeddedDatabase("noticeboard", "classpath:/sql/messagerepositorytest.sql");
 		}
 
 	}
