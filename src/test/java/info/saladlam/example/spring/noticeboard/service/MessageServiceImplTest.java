@@ -19,7 +19,8 @@ import info.saladlam.example.spring.noticeboard.dto.MessageDto;
 import info.saladlam.example.spring.noticeboard.entity.Message;
 import info.saladlam.example.spring.noticeboard.repository.MessageRepository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @ExtendWith(SpringExtension.class)
 public class MessageServiceImplTest {
@@ -50,7 +51,7 @@ public class MessageServiceImplTest {
 	@MockBean
 	private MessageRepository messageRepository;
 
-	private Message buildPreApprovMessage() {
+	private Message buildPreApproveMessage() {
 		Message msg = new Message();
 		msg.setId(1L);
 		msg.setPublishDate(LocalDateTime.of(2021, 2, 1, 12, 0));
@@ -60,8 +61,17 @@ public class MessageServiceImplTest {
 		return msg;
 	}
 
+	private Message buildStaff1Message() {
+		Message msg = new Message();
+		msg.setId(2L);
+		msg.setPublishDate(LocalDateTime.of(2021, 2, 5, 12, 0));
+		msg.setOwner("staff1");
+		msg.setDescription("Test staff1 message");
+		return msg;
+	}
+
 	private Message buildApprovedMessage() {
-		Message msg = buildPreApprovMessage();
+		Message msg = buildPreApproveMessage();
 		msg.setApprovedBy("supervisor1");
 		msg.setApprovedDate(LocalDateTime.of(2021, 1, 31, 12, 0));
 		return msg;
@@ -73,16 +83,16 @@ public class MessageServiceImplTest {
 		MessageDto res = messageService.findOne(1L, LocalDateTime.of(2021, 2, 2, 12, 0));
 
 		Mockito.verify(messageRepository).findOne(1L);
-		assertEquals(1L, res.getId(), "id is not match");
-		assertEquals(MessageDto.PUBLISHED, res.getStatus(), "message is not published");
+		assertThat(res.getId(), is(1L));
+		assertThat(res.getStatus(), is(MessageDto.PUBLISHED));
 	}
 
 	@Test
 	public void findOne_waitForApprove() {
-		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildPreApprovMessage());
+		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildPreApproveMessage());
 		MessageDto res = messageService.findOne(1L, LocalDateTime.of(2021, 2, 2, 12, 0));
 
-		assertEquals(MessageDto.WAITING_APPROVE, res.getStatus(), "message is approved");
+		assertThat(res.getStatus(), is(MessageDto.WAITING_APPROVE));
 	}
 
 	@Test
@@ -90,7 +100,34 @@ public class MessageServiceImplTest {
 		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildApprovedMessage());
 		MessageDto res = messageService.findOne(1L, LocalDateTime.of(2021, 2, 28, 12, 1));
 
-		assertEquals(MessageDto.EXPIRED, res.getStatus(), "message is not expired");
+		assertThat(res.getStatus(), is(MessageDto.EXPIRED));
+	}
+
+	@Test
+	public void approve() {
+		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildPreApproveMessage());
+
+		String approvedBy = "admin";
+		LocalDateTime time = LocalDateTime.now();
+		messageService.approve(1L, approvedBy, time);
+
+		Message excepted = buildPreApproveMessage();
+		excepted.setApprovedBy(approvedBy);
+		excepted.setApprovedDate(time);
+		Mockito.verify(messageRepository).findOne(1L);
+		Mockito.verify(messageRepository).save(excepted);
+	}
+
+	@Test
+	public void findByOwner_past() {
+		List<Message> rList = new ArrayList<>();
+		rList.add(buildApprovedMessage());
+		rList.add(buildStaff1Message());
+		Mockito.when(messageRepository.findByOwner("staff1")).thenReturn(rList);
+
+		List<MessageDto> serviceResult = messageService.findByOwner("staff1", LocalDateTime.of(2021, 1, 31, 12, 15));
+		assertThat(serviceResult, hasItems(allOf(hasProperty("id", is(1L)), hasProperty("status", is(MessageDto.APPROVED)))));
+		assertThat(serviceResult, hasItems(allOf(hasProperty("id", is(2L)), hasProperty("status", is(MessageDto.WAITING_APPROVE)))));
 	}
 
 }
