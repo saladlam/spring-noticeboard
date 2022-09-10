@@ -11,20 +11,20 @@
     <h1 class="item" th:text="#{applicationName}"></h1>
     <div class="right menu">
       <div th:if="${'ja'.equals(#locale.language)}" class="item">
-        <a th:href="@{/?lang=en}" class="ui green basic button" th:text="#{lang.en}"></a>
+        <a th:href="@{/?lang=en}" id="buChEn" class="ui green basic button" th:text="#{lang.en}"></a>
       </div>
       <div th:if="${'en'.equals(#locale.language)}" class="item">
-        <a th:href="@{/?lang=ja}" class="ui green basic button" th:text="#{lang.ja}"></a>
+        <a th:href="@{/?lang=ja}" id="buChJa" class="ui green basic button" th:text="#{lang.ja}"></a>
       </div>
       <div sec:authorize="!isAuthenticated()" class="item">
-        <a th:href="@{/login}" class="ui red basic button" th:text="#{login}"></a>
+        <a th:href="@{/login}" id="buLogin" class="ui red basic button" th:text="#{login}"></a>
       </div>
       <div sec:authorize="isAuthenticated()" class="item">
-        <a th:href="@{/manage}" class="ui red basic button" th:text="#{manage}"></a>
+        <a th:href="@{/manage}" id="buManage" class="ui red basic button" th:text="#{manage}"></a>
       </div>
       <div sec:authorize="isAuthenticated()" class="item">
         <form th:action="@{/logout}" method="post">
-          <button class="ui red basic button" th:text="#{logout}"></button>
+          <button class="ui red basic button" id="buLogout" th:text="#{logout}"></button>
         </form>
       </div>
     </div>
@@ -36,10 +36,10 @@
         <th class="twelve wide" th:text="#{message.description}"></th>
       </tr>
     </thead>
-    <tbody>
-      <tr th:each="message:${messages}" th:object="${message}">
-        <td th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
-        <td nl2br:text="*{description}"></td>
+    <tbody id="taPublish">
+      <tr th:each="message:${messages}" th:object="${message}" th:with="dataId=|pub*{id}|" th:id="${dataId}">
+        <td th:id="|${dataId}PublishDate|" class="pubPublishDate" th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:id="|${dataId}Description|" class="pubDescription" nl2br:text="*{description}"></td>
       </tr>
     </tbody>
   </table>

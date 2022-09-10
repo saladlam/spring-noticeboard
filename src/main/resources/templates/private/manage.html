@@ -10,17 +10,14 @@
   <div class="ui inverted menu">
     <h2 class="item" th:text="|#{applicationName} - #{manage}|"></h2>
     <div class="right menu">
-      <div sec:authorize="!isAuthenticated()" class="item">
-        <a th:href="@{/login}" class="ui red basic button" th:text="#{login}"></a>
-      </div>
       <div sec:authorize="isAuthenticated()" class="item">
         <form th:action="@{/logout}" method="post">
-          <button class="ui red basic button" th:text="#{logout}"></button>
+          <button id="buLogin" class="ui red basic button" th:text="#{logout}"></button>
         </form>
       </div>
     </div>
   </div>
-  <div th:with="auth=${#authentication.getPrincipal()}" th:text="#{welcomeUser(${auth.name}, ${auth.username})}"></div>
+  <div id="txUser" th:with="auth=${#authentication.getPrincipal()}" th:text="#{welcomeUser(${auth.name}, ${auth.username})}"></div>
   <h4 th:text="#{yourMessage}"></h4>
   <table class="ui celled table">
     <thead>
@@ -32,19 +29,19 @@
         <th class="two wide">&nbsp;</th>
       </tr>
     </thead>
-    <tbody>
-      <tr th:each="message:${userMessages}" th:object="${message}">
-        <td th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
-        <td th:text="*{removeDate == null}? #{notSet}: *{#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
-        <td th:text="#{__${statusMap.get(message.status)}__}"></td>
-        <td nl2br:text="${message.description}"></td>
+    <tbody id="taMy">
+      <tr th:each="message:${userMessages}" th:object="${message}" th:with="dataId=|my*{id}|" th:id="${dataId}">
+        <td th:id="|${dataId}PublishDate|" class="myPublishDate" th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:id="|${dataId}RemoveDate|" class="myRemoveDate" th:text="*{removeDate == null}? #{notSet}: *{#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:id="|${dataId}Status|" class="myStatus" th:text="#{__${statusMap.get(message.status)}__}"></td>
+        <td th:id="|${dataId}Description|" class="myDescription" nl2br:text="${message.description}"></td>
         <td>
-          <a th:if="*{status != null and status == 1}" th:href="@{/manage/__*{id}__}" class="ui mini green icon button" th:text="#{edit}"> <i class="edit icon"></i></a>
+          <a th:if="*{status != null and status == 1}" th:id="|${dataId}Edit|" th:href="@{/manage/__*{id}__}" class="ui mini green icon button" th:text="#{edit}"> <i class="edit icon"></i></a>
         </td>
       </tr>
       <tr>
         <td colspan="5">
-          <a class="ui mini icon button" th:href="@{/manage/new}" th:text="#{newMessage}"> <i class="add circle icon"></i></a>
+          <a class="ui mini icon button" id="buNewMessage" th:href="@{/manage/new}" th:text="#{newMessage}"> <i class="add circle icon"></i></a>
         </td>
       </tr>
     </tbody>
@@ -60,14 +57,14 @@
         <th class="two wide">&nbsp;</th>
       </tr>
     </thead>
-    <tbody>
-      <tr th:each="message:${waitingApproveMessages}" th:object="${message}">
-        <td th:text="*{owner}"></td>
-        <td th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
-        <td th:text="*{removeDate == null}? #{notSet}: *{#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
-        <td nl2br:text="*{description}"></td>
+    <tbody id="taApprove">
+      <tr th:each="message:${waitingApproveMessages}" th:object="${message}" th:with="dataId=|app*{id}|" th:id="${dataId}">
+        <td th:id="|${dataId}Owner|" class="appOwner" th:text="*{owner}"></td>
+        <td th:id="|${dataId}PublishDate|" class="appPublishDate" th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:id="|${dataId}RemoveDate|" class="appRemoveDate" th:text="*{removeDate == null}? #{notSet}: *{#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:id="|${dataId}Description|" class="appDescription" nl2br:text="*{description}"></td>
         <td>
-          <a th:if="*{status != null and status == 1}" th:href="@{/manage/__*{id}__/approve}" class="ui mini green icon button" th:text="#{approve}"> <i class="edit icon"></i></a>
+          <a th:if="*{status != null and status == 1}" th:id="|${dataId}Approve|" th:href="@{/manage/__*{id}__/approve}" class="ui mini green icon button" th:text="#{approve}"> <i class="edit icon"></i></a>
         </td>
       </tr>
     </tbody>

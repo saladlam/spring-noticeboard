@@ -13,17 +13,17 @@
       <legend th:text="#{message}"></legend>
       <div class="field">
         <label th:text="#{message.publishDate}"></label>
-        <input type="text" th:field="*{publishDate}" />
+        <input id="edPublishDate" type="text" th:field="*{publishDate}" />
       </div>
       <div class="field">
         <label th:text="#{message.removeDate}"></label>
-        <input type="text" th:field="*{removeDate}" />
+        <input id="edRemoveDate" type="text" th:field="*{removeDate}" />
       </div>
       <div class="field">
         <label th:text="#{message.description}"></label>
-        <textarea name="description" th:text="*{description}"></textarea>
+        <textarea id="edDescription" name="description" th:text="*{description}"></textarea>
       </div>
-      <button class="ui mini primary button" th:text="#{save}"> <i class="send icon"></i></button>
+      <button id="edSave" class="ui mini primary button" th:text="#{save}"> <i class="send icon"></i></button>
     </fieldset>
   </form>
 </div>
