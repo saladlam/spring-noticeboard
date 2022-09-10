@@ -64,7 +64,7 @@
       <tr th:each="message:${waitingApproveMessages}" th:object="${message}">
         <td th:text="*{owner}"></td>
         <td th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
-        <td th:text="*{removeDate == null}? #{notSet}: ${#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:text="*{removeDate == null}? #{notSet}: *{#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
         <td nl2br:text="*{description}"></td>
         <td>
           <a th:if="*{status != null and status == 1}" th:href="@{/manage/__*{id}__/approve}" class="ui mini green icon button" th:text="#{approve}"> <i class="edit icon"></i></a>
