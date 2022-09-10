@@ -35,7 +35,7 @@
     <tbody>
       <tr th:each="message:${userMessages}" th:object="${message}">
         <td th:text="*{#temporals.format(publishDate, 'dd-MM-yyyy HH:mm')}"></td>
-        <td th:text="*{removeDate == null}? #{notSet}: ${#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:text="*{removeDate == null}? #{notSet}: *{#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
         <td th:text="#{__${statusMap.get(message.status)}__}"></td>
         <td nl2br:text="${message.description}"></td>
         <td>
