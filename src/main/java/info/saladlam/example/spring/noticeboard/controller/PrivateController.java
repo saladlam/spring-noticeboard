@@ -1,7 +1,6 @@
 package info.saladlam.example.spring.noticeboard.controller;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,6 @@ import org.springframework.web.server.ResponseStatusException;
 import info.saladlam.example.spring.noticeboard.dto.MessageDto;
 import info.saladlam.example.spring.noticeboard.dto.MessageDtoValidator;
 import info.saladlam.example.spring.noticeboard.service.MessageService;
-import info.saladlam.example.spring.noticeboard.support.CustomJava8TimeEditor;
 
 @Controller
 @RequestMapping("/manage")
@@ -54,8 +52,6 @@ public class PrivateController {
 	public void initBinder(WebDataBinder binder) {
 		binder.setDisallowedFields("id", "owner", "approvedBy", "approvedDate", "status");
 		binder.setValidator(new MessageDtoValidator());
-		binder.registerCustomEditor(LocalDateTime.class, new CustomJava8TimeEditor<LocalDateTime>(
-				DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"), LocalDateTime::from, true));
 	}
 
 	@GetMapping

@@ -1,11 +1,15 @@
 package info.saladlam.example.spring.noticeboard.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
 public class MessageDto {
 
 	private Long id;
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime publishDate;
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
 	private LocalDateTime removeDate;
 	private String owner;
 	private String description;
