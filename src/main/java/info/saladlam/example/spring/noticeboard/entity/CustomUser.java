@@ -10,8 +10,11 @@ public class CustomUser extends User {
 	private String name;
 	private String email;
 
-	public CustomUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-		super(username, password, authorities);
+	public CustomUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
+					  Collection<? extends GrantedAuthority> authorities, String name, String email) {
+		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+		this.name = name;
+		this.email = email;
 	}
 
 	public CustomUser(String username, String password, Collection<? extends GrantedAuthority> authorities, String name, String email) {

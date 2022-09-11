@@ -1,4 +1,4 @@
-package info.saladlam.example.spring.noticeboard.service;
+package info.saladlam.example.spring.noticeboard.test;
 
 import javax.sql.DataSource;
 

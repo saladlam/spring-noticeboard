@@ -1,9 +1,11 @@
-package info.saladlam.example.spring.noticeboard.service;
+package info.saladlam.example.spring.noticeboard.test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.saladlam.example.spring.noticeboard.service.MessageService;
+import info.saladlam.example.spring.noticeboard.service.MessageServiceImpl;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.junit.jupiter.api.Test;
