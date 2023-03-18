@@ -13,7 +13,7 @@
 
 	<groupId>info.saladlam.example</groupId>
 	<artifactId>spring-noticeboard</artifactId>
-	<version>0.12</version>
+	<version>0.13</version>
 	<name>spring-noticeboard</name>
 	<description>Spring boot example application: notice board</description>
 
@@ -41,6 +41,10 @@
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
 		</dependency>
 		<!-- developer tools
 		https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html -->

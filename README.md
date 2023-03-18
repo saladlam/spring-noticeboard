@@ -16,6 +16,7 @@ I write this application is for explain the mechanism of different component of 
 - Spring MVC 5.3.X with thymeleaf 3.0.X
 - Spring Security 5.3.X
 - Spring JDBC 5.3.X
+- Liquibase 4.5.X
 - Dozer 5.5.X
 
 ## Database
@@ -63,6 +64,7 @@ Press Ctrl+C to stop.
 - Spring MVC 5.3.X と thymeleaf 3.0.X
 - Spring Security 5.3.X
 - Spring JDBC 5.3.X
+- Liquibase 4.5.X
 - Dozer 5.5.X
 
 ## データベース

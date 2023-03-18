@@ -3,6 +3,7 @@ package info.saladlam.example.spring.noticeboard.test;
 import info.saladlam.example.spring.noticeboard.service.ApplicationDateTimeService;
 import info.saladlam.example.spring.noticeboard.support.Helper;
 import info.saladlam.example.spring.noticeboard.support.WithMockCustomUser;
+import liquibase.integration.spring.SpringLiquibase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.MethodOrderer;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -34,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class WebLayerTest {
 
 	public static class TestApplicationDateTimeService implements ApplicationDateTimeService {
@@ -56,7 +59,16 @@ public class WebLayerTest {
 
 		@Bean
 		public DataSource testDataSource() {
-			return Helper.getEmbeddedDatabase(WebLayerTest.class.getName());
+			return Helper.getEmbeddedDatabaseBuilder(WebLayerTest.class.getName()).build();
+		}
+
+		@Bean
+		public SpringLiquibase liquibase(DataSource dataSource) {
+			SpringLiquibase liquibase = new SpringLiquibase();
+			liquibase.setChangeLog("classpath:db/schema.xml");
+			liquibase.setDataSource(dataSource);
+			liquibase.setDropFirst(true);
+			return liquibase;
 		}
 
 		@Bean

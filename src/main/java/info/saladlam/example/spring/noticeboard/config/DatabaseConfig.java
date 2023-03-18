@@ -13,7 +13,7 @@ public class DatabaseConfig {
 	@Bean
 	@Profile("!test")
 	public DataSource dataSource() {
-		return Helper.getEmbeddedDatabase("noticeboard", "classpath:/sql/data.sql");
+		return Helper.getEmbeddedDatabaseBuilder("noticeboard").build();
 	}
 
 }

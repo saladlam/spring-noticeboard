@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import info.saladlam.example.spring.noticeboard.entity.Message;
 import info.saladlam.example.spring.noticeboard.support.Helper;
+import liquibase.integration.spring.SpringLiquibase;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
 import info.saladlam.example.spring.noticeboard.repository.MessageRepository;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class MessageRepositoryTest {
 
 	@TestConfiguration
@@ -28,7 +31,16 @@ public class MessageRepositoryTest {
 
 		@Bean
 		public DataSource testDataSource() {
-			return Helper.getEmbeddedDatabase("noticeboard", "classpath:/sql/messagerepositorytest.sql");
+			return Helper.getEmbeddedDatabaseBuilder("noticeboard").build();
+		}
+
+		@Bean
+		public SpringLiquibase liquibase(DataSource dataSource) {
+			SpringLiquibase liquibase = new SpringLiquibase();
+			liquibase.setChangeLog("classpath:db/message-repository-test.xml");
+			liquibase.setDataSource(dataSource);
+			liquibase.setDropFirst(true);
+			return liquibase;
 		}
 
 	}

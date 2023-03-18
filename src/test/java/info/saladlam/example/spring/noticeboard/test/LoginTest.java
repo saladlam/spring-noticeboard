@@ -1,6 +1,7 @@
 package info.saladlam.example.spring.noticeboard.test;
 
 import info.saladlam.example.spring.noticeboard.support.Helper;
+import liquibase.integration.spring.SpringLiquibase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class LoginTest {
 
 	@TestConfiguration
@@ -34,7 +37,16 @@ public class LoginTest {
 
 		@Bean
 		public DataSource testDataSource() {
-			return Helper.getEmbeddedDatabase(LoginTest.class.getName(), "classpath:/sql/usertest.sql");
+			return Helper.getEmbeddedDatabaseBuilder(LoginTest.class.getName()).build();
+		}
+
+		@Bean
+		public SpringLiquibase liquibase(DataSource dataSource) {
+			SpringLiquibase liquibase = new SpringLiquibase();
+			liquibase.setChangeLog("classpath:db/user-test.xml");
+			liquibase.setDataSource(dataSource);
+			liquibase.setDropFirst(true);
+			return liquibase;
 		}
 
 	}
