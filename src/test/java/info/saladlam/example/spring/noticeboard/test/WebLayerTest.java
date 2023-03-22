@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class WebLayerTest {
+class WebLayerTest {
 
 	public static class TestApplicationDateTimeService implements ApplicationDateTimeService {
 
@@ -104,22 +104,22 @@ public class WebLayerTest {
 	}
 
 	private void testGuestView(Document doc) {
-		assertThat(doc.select("#buLogin").size()).isEqualTo(1);
-		assertThat(doc.select("#buManage").size()).isEqualTo(0);
+		assertThat(doc.select("#buLogin")).hasSize(1);
+		assertThat(doc.select("#buManage")).isEmpty();
 	}
 
 	private void testUserView(Document doc) {
-		assertThat(doc.select("#buLogin").size()).isEqualTo(0);
-		assertThat(doc.select("#buManage").size()).isEqualTo(1);
+		assertThat(doc.select("#buLogin")).isEmpty();
+		assertThat(doc.select("#buManage")).hasSize(1);
 	}
 
 	private void checkPublicMessageNumber(Document doc, int except) {
-		assertThat(doc.select("#taPublish > tr").size()).isEqualTo(except);
+		assertThat(doc.select("#taPublish > tr")).hasSize(except);
 	}
 
 	@Test
 	@Order(1010)
-	public void guestViewMain1() throws Exception {
+	void guestViewMain1() throws Exception {
 		Document doc = getDocument(get("/"));
 		testGuestView(doc);
 		checkPublicMessageNumber(doc, 0);
@@ -128,7 +128,7 @@ public class WebLayerTest {
 	@Test
 	@Order(1020)
 	@WithMockCustomUser(username = "user1", authorities = {"USER"}, name = "First Last")
-	public void userAction1() throws Exception {
+	void userAction1() throws Exception {
 		timeService.setCurrent(timeService.getCurrentLocalDateTime().plusHours(1));
 		Document doc = getDocument(get("/"));
 		testUserView(doc);
@@ -141,7 +141,7 @@ public class WebLayerTest {
 		assertThat(doc.select("#txUser").text())
 				.contains("(user1)")
 				.contains("First Last");
-		assertThat(doc.select("#taMy > tr").size()).isEqualTo(1 + 1);
+		assertThat(doc.select("#taMy > tr")).hasSize(1 + 1);
 		assertThat(doc.select("#my1 .myPublishDate").text()).isEqualTo("01-09-2022 10:00");
 		assertThat(doc.select("#my1 .myRemoveDate").text()).isEqualTo("03-09-2022 17:00");
 		assertThat(doc.select("#my1 .myStatus").text()).isEqualTo("Waiting Approve");
@@ -155,7 +155,7 @@ public class WebLayerTest {
 	@Test
 	@Order(1030)
 	@WithMockCustomUser(username = "admin1", authorities = {"USER", "ADMIN"}, name = "Admin User 1")
-	public void adminAction1() throws Exception {
+	void adminAction1() throws Exception {
 		timeService.setCurrent(timeService.getCurrentLocalDateTime().plusHours(1));
 		Document doc = getDocument(get("/"));
 		testUserView(doc);
@@ -168,7 +168,7 @@ public class WebLayerTest {
 		assertThat(doc.select("#txUser").text())
 				.contains("(admin1)")
 				.contains("Admin User 1");
-		assertThat(doc.select("#taMy > tr").size()).isEqualTo(2);
+		assertThat(doc.select("#taMy > tr")).hasSize(2);
 		assertThat(doc.select("#my2 .myPublishDate").text()).isEqualTo("01-09-2022 11:30");
 		assertThat(doc.select("#my2 .myRemoveDate").text()).isEqualTo("Not set");
 		assertThat(doc.select("#my2 .myStatus").text()).isEqualTo("Waiting Approve");
@@ -202,18 +202,18 @@ public class WebLayerTest {
 	@Test
 	@Order(1040)
 	@WithMockCustomUser(username = "user2", authorities = {"USER"}, name = "Alan Bush")
-	public void userAction2() throws Exception {
+	void userAction2() throws Exception {
 		timeService.setCurrent(timeService.getCurrentLocalDateTime().plusHours(1));
 		Document doc = getDocument(get("/manage"));
 		assertThat(doc.select("#txUser").text())
 				.contains("(user2)")
 				.contains("Alan Bush");
-		assertThat(doc.select("#taMy > tr").size()).isEqualTo(0 + 1);
+		assertThat(doc.select("#taMy > tr")).hasSize(0 + 1);
 	}
 
 	@Test
 	@Order(1050)
-	public void guestViewMain2() throws Exception {
+	void guestViewMain2() throws Exception {
 		timeService.setCurrent(LocalDateTime.of(2022, 9, 3, 17, 1));
 		Document doc = getDocument(get("/"));
 		checkPublicMessageNumber(doc, 1);
@@ -224,7 +224,7 @@ public class WebLayerTest {
 	@Test
 	@Order(1060)
 	@WithMockCustomUser(username = "user3", authorities = {"USER"}, name = "Teresa Mike")
-	public void userAction3() throws Exception {
+	void userAction3() throws Exception {
 		timeService.setCurrent(timeService.getCurrentLocalDateTime().plusHours(1));
 		sendData(post("/manage/new/save"), "10-09-2022 10:00", null, "user3 message 3");
 		timeService.setCurrent(timeService.getCurrentLocalDateTime().plusHours(1));

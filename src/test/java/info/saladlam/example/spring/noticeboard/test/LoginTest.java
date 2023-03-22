@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class LoginTest {
+class LoginTest {
 
 	@TestConfiguration
 	public static class LoginTestContextConfiguration {
@@ -69,19 +69,19 @@ public class LoginTest {
 	}
 
 	@Test
-	public void loadLoginPage() throws Exception {
+	void loadLoginPage() throws Exception {
 		Document doc = getDocument(get("/login"));
-		assertThat(doc.select("input[name=username]").size()).isEqualTo(1);
-		assertThat(doc.select("input[name=password]").size()).isEqualTo(1);
+		assertThat(doc.select("input[name=username]")).hasSize(1);
+		assertThat(doc.select("input[name=password]")).hasSize(1);
 	}
 
 	@Test
-	public void loginSuccess() throws Exception {
+	void loginSuccess() throws Exception {
 		sendLogin(post("/loginHandler"), "user1", "dIw8#a-$eW", redirectedUrl("/"));
 	}
 
 	@Test
-	public void loginFail() throws Exception {
+	void loginFail() throws Exception {
 		sendLogin(post("/loginHandler"), "user1", "password1", redirectedUrl("/login?error=true"));
 	}
 

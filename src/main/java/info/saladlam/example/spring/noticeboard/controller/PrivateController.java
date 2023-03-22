@@ -36,7 +36,8 @@ import info.saladlam.example.spring.noticeboard.service.MessageService;
 @RequestMapping("/manage")
 public class PrivateController {
 
-	private final static Map<Integer, String> statusMap = new HashMap<>();
+	private static final String REDIRECT_MANAGE = "redirect:/manage";
+	private static final Map<Integer, String> statusMap = new HashMap<>();
 
 	static {
 		statusMap.put(null, "status.unknown");
@@ -86,13 +87,13 @@ public class PrivateController {
 
 		message.setOwner(this.getLoginName());
 		this.messageService.save(message);
-		return "redirect:/manage";
+		return REDIRECT_MANAGE;
 	}
 
 	@GetMapping("/{messageId}")
 	public String editMessage(@PathVariable("messageId") long id, Model model) {
 		MessageDto message = this.messageService.findOne(id, this.getCurrentLocalDateTime());
-		if (Objects.nonNull(message) && message.getStatus() == MessageDto.WAITING_APPROVE
+		if (Objects.nonNull(message) && message.getStatus().equals(MessageDto.WAITING_APPROVE)
 				&& message.getOwner().equals(this.getLoginName())) {
 			model.addAttribute("isEdit", true);
 			model.addAttribute("postHandler", id + "/save");
@@ -107,11 +108,11 @@ public class PrivateController {
 	public String saveEditMessage(@PathVariable("messageId") long id, @Valid @ModelAttribute MessageDto message,
 			BindingResult errors) {
 		if (errors.hasErrors()) {
-			return "redirect:/manage/" + String.valueOf(id);
+			return "redirect:/manage/" + id;
 		}
 
 		MessageDto originalMessage = this.messageService.findOne(id, this.getCurrentLocalDateTime());
-		if (Objects.nonNull(originalMessage) && (originalMessage.getStatus() == MessageDto.WAITING_APPROVE)
+		if (Objects.nonNull(originalMessage) && (originalMessage.getStatus().equals(MessageDto.WAITING_APPROVE))
 				&& originalMessage.getOwner().equals(this.getLoginName())) {
 			originalMessage.setPublishDate(message.getPublishDate());
 			originalMessage.setRemoveDate(message.getRemoveDate());
@@ -120,7 +121,7 @@ public class PrivateController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
-		return "redirect:/manage";
+		return REDIRECT_MANAGE;
 	}
 
 	@GetMapping("/{messageId}/approve")
@@ -130,7 +131,7 @@ public class PrivateController {
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
-		return "redirect:/manage";
+		return REDIRECT_MANAGE;
 	}
 
 	private String getLoginName() {
@@ -141,7 +142,7 @@ public class PrivateController {
 	private List<String> getLoginAuthorities() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-		return authorities.stream().map(obj -> obj.getAuthority()).collect(Collectors.toList());
+		return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 	}
 
 	private LocalDateTime getCurrentLocalDateTime() {

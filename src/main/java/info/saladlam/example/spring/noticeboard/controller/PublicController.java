@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import info.saladlam.example.spring.noticeboard.repository.MessageRepository;
 import info.saladlam.example.spring.noticeboard.service.ApplicationDateTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,11 +32,7 @@ public class PublicController {
 
 	@GetMapping("/login")
 	public String login(Boolean error, Model model) {
-		if (Objects.nonNull(error) && error.equals(Boolean.TRUE)) {
-			model.addAttribute("error", true);
-		} else {
-			model.addAttribute("error", false);
-		}
+		model.addAttribute("error", Objects.nonNull(error) && error.equals(Boolean.TRUE));
 		return "public/login";
 	}
 

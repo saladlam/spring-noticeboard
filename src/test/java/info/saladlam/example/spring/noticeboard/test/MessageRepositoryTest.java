@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class MessageRepositoryTest {
+class MessageRepositoryTest {
 
 	@TestConfiguration
 	static class MessageRepositoryTestContextConfiguration {
@@ -97,7 +97,7 @@ public class MessageRepositoryTest {
 	}
 
 	@Test
-	public void findPublished() {
+	void findPublished() {
 		List<Message> messageList = messageRepository.findPublished(LocalDateTime.of(2022, 9, 4, 11, 30));
 
 		assertEquals(2, messageList.size());
@@ -106,7 +106,7 @@ public class MessageRepositoryTest {
 	}
 
 	@Test
-	public void findWaitingApprove() {
+	void findWaitingApprove() {
 		List<Message> messageList = messageRepository.findWaitingApprove();
 
 		assertEquals(2, messageList.size());
@@ -115,7 +115,7 @@ public class MessageRepositoryTest {
 	}
 
 	@Test
-	public void findByOwner() {
+	void findByOwner() {
 		List<Message> messageList = messageRepository.findByOwner("user2");
 
 		assertEquals(2, messageList.size());
@@ -124,7 +124,7 @@ public class MessageRepositoryTest {
 	}
 
 	@Test
-	public void zTestSave() {
+	void zTestSave() {
 		messageRepository.save(getMNew());
 		Message message = messageRepository.findOne(5L);
 		Message exceptedMessage = getMNew();

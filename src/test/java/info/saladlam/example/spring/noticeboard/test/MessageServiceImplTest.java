@@ -25,7 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @ExtendWith(SpringExtension.class)
-public class MessageServiceImplTest {
+class MessageServiceImplTest {
 
 	@TestConfiguration
 	static class MessageServiceImplTestContextConfiguration {
@@ -80,7 +80,7 @@ public class MessageServiceImplTest {
 	}
 
 	@Test
-	public void findOne_published() {
+	void findOne_published() {
 		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildApprovedMessage());
 		MessageDto res = messageService.findOne(1L, LocalDateTime.of(2021, 2, 2, 12, 0));
 
@@ -90,7 +90,7 @@ public class MessageServiceImplTest {
 	}
 
 	@Test
-	public void findOne_waitForApprove() {
+	void findOne_waitForApprove() {
 		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildPreApproveMessage());
 		MessageDto res = messageService.findOne(1L, LocalDateTime.of(2021, 2, 2, 12, 0));
 
@@ -98,7 +98,7 @@ public class MessageServiceImplTest {
 	}
 
 	@Test
-	public void findOne_expired() {
+	void findOne_expired() {
 		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildApprovedMessage());
 		MessageDto res = messageService.findOne(1L, LocalDateTime.of(2021, 2, 28, 12, 1));
 
@@ -106,7 +106,7 @@ public class MessageServiceImplTest {
 	}
 
 	@Test
-	public void approve() {
+	void approve() {
 		Mockito.when(messageRepository.findOne(1L)).thenReturn(buildPreApproveMessage());
 
 		String approvedBy = "admin";
@@ -121,7 +121,7 @@ public class MessageServiceImplTest {
 	}
 
 	@Test
-	public void findByOwner_past() {
+	void findByOwner_past() {
 		List<Message> rList = new ArrayList<>();
 		rList.add(buildApprovedMessage());
 		rList.add(buildStaff1Message());

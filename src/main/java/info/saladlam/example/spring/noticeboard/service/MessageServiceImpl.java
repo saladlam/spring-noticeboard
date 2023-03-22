@@ -34,7 +34,7 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public List<MessageDto> findPublished(LocalDateTime time) {
 		List<Message> publishedMessage = this.messageRepository.findPublished(time);
-		return publishedMessage.stream().map((from) -> {
+		return publishedMessage.stream().map(from -> {
 			MessageDto to = mapper.map(from, MessageDto.class);
 			to.setStatus(MessageDto.PUBLISHED);
 			return to;
@@ -44,7 +44,7 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public List<MessageDto> findWaitingApprove() {
 		List<Message> publishedMessage = this.messageRepository.findWaitingApprove();
-		return publishedMessage.stream().map((from) -> {
+		return publishedMessage.stream().map(from -> {
 			MessageDto to = mapper.map(from, MessageDto.class);
 			to.setStatus(MessageDto.WAITING_APPROVE);
 			return to;
@@ -54,7 +54,7 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public List<MessageDto> findByOwner(String owner, LocalDateTime time) {
 		List<Message> publishedMessage = this.messageRepository.findByOwner(owner);
-		return publishedMessage.stream().map((from) -> {
+		return publishedMessage.stream().map(from -> {
 			MessageDto to = mapper.map(from, MessageDto.class);
 			this.updateStatus(to, time);
 			return to;

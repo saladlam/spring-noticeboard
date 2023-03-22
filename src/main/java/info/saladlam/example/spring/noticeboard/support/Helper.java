@@ -6,6 +6,10 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 public abstract class Helper {
 
+	private Helper() {
+		throw new IllegalStateException("Can't create instance of utility class");
+	}
+
 	public static EmbeddedDatabase getEmbeddedDatabase(String name, String ... addScripts) {
 		EmbeddedDatabaseBuilder db = Helper.getEmbeddedDatabaseBuilder(name)
 			.setScriptEncoding("UTF-8")

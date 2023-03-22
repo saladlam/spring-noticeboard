@@ -18,7 +18,7 @@ import info.saladlam.example.spring.noticeboard.entity.Message;
 public class JdbcMessageRepository implements MessageRepository {
 
 	@Autowired
-	private JdbcTemplate JdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
 	private Timestamp toTimestamp(LocalDateTime datetime) {
 		if (Objects.isNull(datetime)) {
@@ -30,26 +30,26 @@ public class JdbcMessageRepository implements MessageRepository {
 
 	@Override
 	public List<Message> findPublished(LocalDateTime at) {
-		return this.JdbcTemplate.query(
+		return this.jdbcTemplate.query(
 				"SELECT * FROM message WHERE approved_by IS NOT NULL AND publish_date <= ? AND (remove_date IS NULL OR remove_date > ?) ORDER BY publish_date DESC",
 				BeanPropertyRowMapper.newInstance(Message.class), at, at);
 	}
 
 	@Override
 	public List<Message> findWaitingApprove() {
-		return this.JdbcTemplate.query("SELECT * FROM message WHERE approved_by IS NULL ORDER BY publish_date DESC",
+		return this.jdbcTemplate.query("SELECT * FROM message WHERE approved_by IS NULL ORDER BY publish_date DESC",
 				BeanPropertyRowMapper.newInstance(Message.class));
 	}
 
 	@Override
 	public List<Message> findByOwner(String owner) {
-		return this.JdbcTemplate.query("SELECT * FROM message WHERE owner = ? ORDER BY publish_date DESC",
+		return this.jdbcTemplate.query("SELECT * FROM message WHERE owner = ? ORDER BY publish_date DESC",
 				BeanPropertyRowMapper.newInstance(Message.class), owner);
 	}
 
 	@Override
 	public Message findOne(long id) {
-		return this.JdbcTemplate.queryForObject("SELECT * FROM message WHERE id = ?",
+		return this.jdbcTemplate.queryForObject("SELECT * FROM message WHERE id = ?",
 				BeanPropertyRowMapper.newInstance(Message.class), id);
 	}
 
@@ -59,7 +59,7 @@ public class JdbcMessageRepository implements MessageRepository {
 			String sql = "INSERT INTO message(publish_date, remove_date, owner, description, approved_by, approved_date) VALUES (?, ?, ?, ?, ?, ?)";
 			GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
-			this.JdbcTemplate.update(con -> {
+			this.jdbcTemplate.update(con -> {
 				PreparedStatement ps = con.prepareStatement(sql, new String[] { "id" });
 				ps.setTimestamp(1, this.toTimestamp(message.getPublishDate()));
 				ps.setTimestamp(2, this.toTimestamp(message.getRemoveDate()));
@@ -70,10 +70,10 @@ public class JdbcMessageRepository implements MessageRepository {
 				return ps;
 			}, keyHolder);
 
-			message.setId(keyHolder.getKey().longValue());
+			message.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
 		} else {
 			String sql = "UPDATE message SET publish_date = ?, remove_date = ?, owner = ?, description = ?, approved_by = ?, approved_date = ? WHERE id = ?";
-			this.JdbcTemplate.update(sql, message.getPublishDate(), message.getRemoveDate(), message.getOwner(),
+			this.jdbcTemplate.update(sql, message.getPublishDate(), message.getRemoveDate(), message.getOwner(),
 					message.getDescription(), message.getApprovedBy(), message.getApprovedDate(), message.getId());
 		}
 

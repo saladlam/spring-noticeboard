@@ -7,8 +7,8 @@ import java.util.Collection;
 
 public class CustomUser extends User {
 
-	private String name;
-	private String email;
+	private final String name;
+	private final String email;
 
 	public CustomUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
 					  Collection<? extends GrantedAuthority> authorities, String name, String email) {
@@ -34,11 +34,9 @@ public class CustomUser extends User {
 	@Override
 	public String toString() {
 		String parent = super.toString();
-		StringBuilder sb = new StringBuilder();
-		sb.append(parent.substring(0, parent.length() - 1)).append(", ");
-		sb.append("Name=").append(this.name).append(", ");
-		sb.append("E-mail=").append(this.email).append("]");
-		return sb.toString();
+		return parent.substring(0, parent.length() - 1) + ", " +
+				"Name=" + this.name + ", " +
+				"E-mail=" + this.email + "]";
 	}
 
 }
