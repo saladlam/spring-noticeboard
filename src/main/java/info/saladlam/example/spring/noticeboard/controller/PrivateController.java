@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import info.saladlam.example.spring.noticeboard.service.ApplicationDateTimeService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -12,18 +12,18 @@ I write this application is for explain the mechanism of different component of 
 - Multi language UI
 
 ## Main component used
-- Spring Boot 2.6.X
-- Spring MVC 5.3.X with thymeleaf 3.0.X
-- Spring Security 5.3.X
-- Spring JDBC 5.3.X
-- Liquibase 4.5.X
-- Dozer 5.5.X
+- Spring Boot 3.4.X
+- Spring MVC 6.2.X with thymeleaf 3.1.X
+- Spring Security 6.4.X
+- Spring JDBC 6.2.X
+- Liquibase 4.29.X
+- Dozer 7.0.X
 
 ## Database
 Data stored in embedded H2 database. Schema and data is imported when application start and all data will be lost after application shutdown.
 
 ## Prerequisite
-- Java SE Development Kit 8 or above
+- Java SE Development Kit 17 or above
 - Internet connection
 
 ## Compile and run
@@ -60,18 +60,18 @@ Press Ctrl+C to stop.
 - 多言語ユーザーインターフェイス
 
 ## 使われる主要なコンポーネント
-- Spring Boot 2.6.X
-- Spring MVC 5.3.X と thymeleaf 3.0.X
-- Spring Security 5.3.X
-- Spring JDBC 5.3.X
-- Liquibase 4.5.X
-- Dozer 5.5.X
+- Spring Boot 3.4.X
+- Spring MVC 6.2.X と thymeleaf 3.1.X
+- Spring Security 6.4.X
+- Spring JDBC 6.2.X
+- Liquibase 4.29.X
+- Dozer 7.0.X
 
 ## データベース
 データは埋め込み H2 データベースに記憶する。スキーマとデータはアプリケーション起動時がインポートされ、それからアプリケーション終了時全てのデータがなくなった。
 
 ## 必要なもの
-- Java SE Development Kit 8以降
+- Java SE Development Kit 17以降
 - インタネット接続
 
 ## コンパイルと実行

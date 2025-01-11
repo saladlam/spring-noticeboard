@@ -4,17 +4,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.dozermapper.spring.DozerBeanMapperFactoryBean;
 import info.saladlam.example.spring.noticeboard.service.MessageService;
 import info.saladlam.example.spring.noticeboard.service.MessageServiceImpl;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import info.saladlam.example.spring.noticeboard.dto.MessageDto;
@@ -36,13 +35,8 @@ class MessageServiceImplTest {
 		}
 
 		@Bean
-		public Mapper mapper() {
-			List<String> mappingFiles = new ArrayList<>();
-			mappingFiles.add("dozerJdk8Converters.xml");
-
-			DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
-			dozerBeanMapper.setMappingFiles(mappingFiles);
-			return dozerBeanMapper;
+		public DozerBeanMapperFactoryBean dozerMapper() {
+			return new DozerBeanMapperFactoryBean();
 		}
 
 	}
@@ -50,7 +44,7 @@ class MessageServiceImplTest {
 	@Autowired
 	private MessageService messageService;
 
-	@MockBean
+	@MockitoBean
 	private MessageRepository messageRepository;
 
 	private Message buildPreApproveMessage() {

@@ -13,11 +13,11 @@
       <legend th:text="#{message}"></legend>
       <div class="field">
         <label th:text="#{message.publishDate}"></label>
-        <input id="edPublishDate" type="text" th:field="*{publishDate}" />
+        <input id="edPublishDate" type="text" placeholder="DD-MM-YYYY HH:MM" th:field="*{publishDate}" />
       </div>
       <div class="field">
         <label th:text="#{message.removeDate}"></label>
-        <input id="edRemoveDate" type="text" th:field="*{removeDate}" />
+        <input id="edRemoveDate" type="text" placeholder="DD-MM-YYYY HH:MM" th:field="*{removeDate}" />
       </div>
       <div class="field">
         <label th:text="#{message.description}"></label>

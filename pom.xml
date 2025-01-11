@@ -7,18 +7,20 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.11</version>
+		<version>3.4.1</version>
 		<relativePath />
 	</parent>
 
 	<groupId>info.saladlam.example</groupId>
 	<artifactId>spring-noticeboard</artifactId>
-	<version>0.13</version>
+	<version>0.2</version>
 	<name>spring-noticeboard</name>
 	<description>Spring boot example application: notice board</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
@@ -36,11 +38,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.liquibase</groupId>
@@ -54,32 +60,26 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- [custom spring boot starter] -->
+		<dependency>
+			<groupId>com.github.dozermapper</groupId>
+			<artifactId>dozer-spring-boot-starter</artifactId>
+			<version>7.0.0</version>
+		</dependency>
+
 		<!-- [custom library] -->
-		<dependency>
-			<groupId>net.sf.dozer</groupId>
-			<artifactId>dozer</artifactId>
-			<version>5.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>io.craftsman</groupId>
-			<artifactId>dozer-jdk8-support</artifactId>
-			<version>1.0.6</version>
-		</dependency>
 		<dependency>
 			<groupId>com.github.bufferings</groupId>
 			<artifactId>thymeleaf-extras-nl2br</artifactId>
 			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
 		</dependency>
 
 		<!-- [runtime scope] -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<!-- problem on GeneratedKeyHolder on newer version -->
+			<version>1.4.200</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.15.3</version>
+			<version>1.18.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -107,6 +107,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- due to https://docs.liquibase.com/dropall -->
+					<argLine>@{argLine} -Dliquibase.command.dropAll.requireForce=true -Dliquibase.command.dropAll.force=true</argLine>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

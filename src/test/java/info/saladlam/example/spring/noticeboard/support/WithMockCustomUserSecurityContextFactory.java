@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Copy from org.springframework.security.test.context.support.WithMockUserSecurityContextFactory and customize.
  */
-final class WithMockUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
+final class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
 
 	@Override
 	public SecurityContext createSecurityContext(WithMockCustomUser withUser) {
