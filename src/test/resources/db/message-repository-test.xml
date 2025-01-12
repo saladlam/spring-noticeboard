@@ -40,5 +40,6 @@
             <column name="approved_by" value="admin"/>
             <column name="approved_date" value="2022-09-01 12:00:00"/>
         </insert>
+        <addAutoIncrement tableName="message" columnName="id" columnDataType="BIGINT" startWith="5"/>
     </changeSet>
 </databaseChangeLog>

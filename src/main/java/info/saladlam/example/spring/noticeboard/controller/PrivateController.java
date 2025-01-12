@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
@@ -29,7 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import info.saladlam.example.spring.noticeboard.dto.MessageDto;
-import info.saladlam.example.spring.noticeboard.dto.MessageDtoValidator;
+import info.saladlam.example.spring.noticeboard.dto.MessageMvcDto;
+import info.saladlam.example.spring.noticeboard.dto.MessageMvcDtoValidator;
 import info.saladlam.example.spring.noticeboard.service.MessageService;
 
 @Controller
@@ -37,6 +37,7 @@ import info.saladlam.example.spring.noticeboard.service.MessageService;
 public class PrivateController {
 
 	private static final String REDIRECT_MANAGE = "redirect:/manage";
+	private static final String MESSAGE_TEMPLATE = "private/message";
 	private static final Map<Integer, String> statusMap = new HashMap<>();
 
 	static {
@@ -47,6 +48,12 @@ public class PrivateController {
 		statusMap.put(MessageDto.EXPIRED, "status.expired");
 	}
 
+	private static void configureModel(Model model, boolean isEdit, String postHandler, MessageMvcDto message) {
+		model.addAttribute("isEdit", isEdit);
+		model.addAttribute("postHandler", postHandler);
+		model.addAttribute("message", message);
+	}
+
 	@Autowired
 	private MessageService messageService;
 	@Autowired
@@ -54,8 +61,7 @@ public class PrivateController {
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.setDisallowedFields("id", "owner", "approvedBy", "approvedDate", "status");
-		binder.setValidator(new MessageDtoValidator());
+		binder.setValidator(new MessageMvcDtoValidator());
 	}
 
 	@GetMapping
@@ -73,20 +79,23 @@ public class PrivateController {
 
 	@GetMapping("/new")
 	public String createMessage(Model model) {
-		model.addAttribute("isEdit", false);
-		model.addAttribute("postHandler", "new/save");
-		model.addAttribute("message", new MessageDto());
-		return "private/message";
+		configureModel(model, false, "new", new MessageMvcDto());
+		return MESSAGE_TEMPLATE;
 	}
 
-	@PostMapping("/new/save")
-	public String saveCreateMessage(@Valid @ModelAttribute MessageDto message, BindingResult errors) {
+	@PostMapping("/new")
+	public String saveCreateMessage(@Valid @ModelAttribute("message") MessageMvcDto message, BindingResult errors, Model model) {
 		if (errors.hasErrors()) {
-			return "redirect:/manage/new";
+			configureModel(model, false, "new", message);
+			return MESSAGE_TEMPLATE;
 		}
 
-		message.setOwner(this.getLoginName());
-		this.messageService.save(message);
+		MessageDto dto = new MessageDto();
+		dto.setPublishDate(message.getPublishDate());
+		dto.setRemoveDate(message.getRemoveDate());
+		dto.setDescription(message.getDescription());
+		dto.setOwner(this.getLoginName());
+		this.messageService.save(dto);
 		return REDIRECT_MANAGE;
 	}
 
@@ -95,20 +104,19 @@ public class PrivateController {
 		MessageDto message = this.messageService.findOne(id, this.getCurrentLocalDateTime());
 		if (Objects.nonNull(message) && message.getStatus().equals(MessageDto.WAITING_APPROVE)
 				&& message.getOwner().equals(this.getLoginName())) {
-			model.addAttribute("isEdit", true);
-			model.addAttribute("postHandler", id + "/save");
-			model.addAttribute("message", message);
+			configureModel(model, true, Long.toString(id), new MessageMvcDto(message));
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
-		return "private/message";
+		return MESSAGE_TEMPLATE;
 	}
 
-	@PostMapping("/{messageId}/save")
-	public String saveEditMessage(@PathVariable("messageId") long id, @Valid @ModelAttribute MessageDto message,
-			BindingResult errors) {
+	@PostMapping("/{messageId}")
+	public String saveEditMessage(@Valid @ModelAttribute("message") MessageMvcDto message,
+								  BindingResult errors, Model model, @PathVariable("messageId") long id) {
 		if (errors.hasErrors()) {
-			return "redirect:/manage/" + id;
+			configureModel(model, true, Long.toString(id), message);
+			return MESSAGE_TEMPLATE;
 		}
 
 		MessageDto originalMessage = this.messageService.findOne(id, this.getCurrentLocalDateTime());
@@ -142,7 +150,7 @@ public class PrivateController {
 	private List<String> getLoginAuthorities() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-		return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+		return authorities.stream().map(GrantedAuthority::getAuthority).toList();
 	}
 
 	private LocalDateTime getCurrentLocalDateTime() {

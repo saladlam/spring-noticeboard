@@ -10,6 +10,9 @@
   <div class="ui inverted menu">
     <h2 class="item" th:text="|#{applicationName} - #{manage}|"></h2>
     <div class="right menu">
+      <div class="item">
+        <a th:href="@{/}" id="buPublic" class="ui red basic button" th:text="#{home}"></a>
+      </div>
       <div sec:authorize="isAuthenticated()" class="item">
         <form th:action="@{/logout}" method="post">
           <button id="buLogin" class="ui red basic button" th:text="#{logout}"></button>
@@ -36,12 +39,12 @@
         <td th:id="|${dataId}Status|" class="myStatus" th:text="#{__${statusMap.get(message.status)}__}"></td>
         <td th:id="|${dataId}Description|" class="myDescription" nl2br:text="${message.description}"></td>
         <td>
-          <a th:if="*{status != null and status == 1}" th:id="|${dataId}Edit|" th:href="@{/manage/__*{id}__}" class="ui mini green icon button" th:text="#{edit}"> <i class="edit icon"></i></a>
+          <a th:if="*{status != null and status == 1}" th:id="|${dataId}Edit|" th:href="@{/manage/__*{id}__}" class="ui mini green icon button">[[#{edit}]] <i class="edit icon"></i></a>
         </td>
       </tr>
       <tr>
         <td colspan="5">
-          <a class="ui mini icon button" id="buNewMessage" th:href="@{/manage/new}" th:text="#{newMessage}"> <i class="add circle icon"></i></a>
+          <a class="ui mini icon button" id="buNewMessage" th:href="@{/manage/new}">[[#{newMessage}]] <i class="add circle icon"></i></a>
         </td>
       </tr>
     </tbody>
@@ -64,7 +67,7 @@
         <td th:id="|${dataId}RemoveDate|" class="appRemoveDate" th:text="*{removeDate == null}? #{notSet}: *{#temporals.format(removeDate, 'dd-MM-yyyy HH:mm')}"></td>
         <td th:id="|${dataId}Description|" class="appDescription" nl2br:text="*{description}"></td>
         <td>
-          <a th:if="*{status != null and status == 1}" th:id="|${dataId}Approve|" th:href="@{/manage/__*{id}__/approve}" class="ui mini green icon button" th:text="#{approve}"> <i class="edit icon"></i></a>
+          <a th:if="*{status != null and status == 1}" th:id="|${dataId}Approve|" th:href="@{/manage/__*{id}__/approve}" class="ui mini green icon button">[[#{approve}]] <i class="edit icon"></i></a>
         </td>
       </tr>
     </tbody>

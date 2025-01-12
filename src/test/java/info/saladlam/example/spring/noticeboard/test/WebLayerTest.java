@@ -91,10 +91,13 @@ class WebLayerTest {
 		return Jsoup.parse(result.getResponse().getContentAsString());
 	}
 
-	private void sendData(MockHttpServletRequestBuilder requestBuilder, String publishDate, String removeDate, String description) throws Exception {
+	private void sendData(MockHttpServletRequestBuilder requestBuilder, String publishDateDate, String publishDateTime,
+						  String removeDateDate, String removeDateTime, String description) throws Exception {
 		mockMvc.perform(requestBuilder.with(csrf())
-				.param("publishDate", publishDate)
-				.param("removeDate", removeDate)
+				.param("publishDateDate", publishDateDate)
+				.param("publishDateTime", publishDateTime)
+				.param("removeDateDate", removeDateDate)
+				.param("removeDateTime", removeDateTime)
 				.param("description", description)
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)).andExpect(status().is3xxRedirection());
 	}
@@ -134,7 +137,7 @@ class WebLayerTest {
 		testUserView(doc);
 		checkPublicMessageNumber(doc, 0);
 
-		sendData(post("/manage/new/save"), "01-09-2022 10:00", "03-09-2022 17:00", "user1 message 1");
+		sendData(post("/manage/new"), "2022-09-01", "10:00", "2022-09-03", "17:00", "user1 message 1");
 		doc = getDocument(get("/"));
 		checkPublicMessageNumber(doc, 0);
 		doc = getDocument(get("/manage"));
@@ -147,8 +150,10 @@ class WebLayerTest {
 		assertThat(doc.select("#my1 .myStatus").text()).isEqualTo("Waiting Approve");
 		assertThat(doc.select("#my1 .myDescription").text()).isEqualTo("user1 message 1");
 		doc = getDocument(get("/manage/1"));
-		assertThat(doc.select("#edPublishDate").val()).isEqualTo("01-09-2022 10:00");
-		assertThat(doc.select("#edRemoveDate").val()).isEqualTo("03-09-2022 17:00");
+		assertThat(doc.select("#edPublishDateDate").val()).isEqualTo("2022-09-01");
+		assertThat(doc.select("#edPublishDateTime").val()).isEqualTo("10:00");
+		assertThat(doc.select("#edRemoveDateDate").val()).isEqualTo("2022-09-03");
+		assertThat(doc.select("#edRemoveDateTime").val()).isEqualTo("17:00");
 		assertThat(doc.select("#edDescription").val()).isEqualTo("user1 message 1");
 	}
 
@@ -161,7 +166,7 @@ class WebLayerTest {
 		testUserView(doc);
 		checkPublicMessageNumber(doc, 0);
 
-		sendData(post("/manage/new/save"), "01-09-2022 11:30", null, "admin1 message 2");
+		sendData(post("/manage/new"), "2022-09-01", "11:30", "", "", "admin1 message 2");
 		doc = getDocument(get("/"));
 		checkPublicMessageNumber(doc, 0);
 		doc = getDocument(get("/manage"));
@@ -226,13 +231,15 @@ class WebLayerTest {
 	@WithMockCustomUser(username = "user3", authorities = {"USER"}, name = "Teresa Mike")
 	void userAction3() throws Exception {
 		timeService.setCurrent(timeService.getCurrentLocalDateTime().plusHours(1));
-		sendData(post("/manage/new/save"), "10-09-2022 10:00", null, "user3 message 3");
+		sendData(post("/manage/new"), "2022-09-10", "10:00", "", "", "user3 message 3");
 		timeService.setCurrent(timeService.getCurrentLocalDateTime().plusHours(1));
-		sendData(post("/manage/3/save"), "06-09-2022 10:00", "06-09-2022 17:00", "user3 message 3a");
+		sendData(post("/manage/3"), "2022-09-06", "10:00", "2022-09-06", "17:00", "user3 message 3a");
 
 		Document doc = getDocument(get("/manage/3"));
-		assertThat(doc.select("#edPublishDate").val()).isEqualTo("06-09-2022 10:00");
-		assertThat(doc.select("#edRemoveDate").val()).isEqualTo("06-09-2022 17:00");
+		assertThat(doc.select("#edPublishDateDate").val()).isEqualTo("2022-09-06");
+		assertThat(doc.select("#edPublishDateTime").val()).isEqualTo("10:00");
+		assertThat(doc.select("#edRemoveDateDate").val()).isEqualTo("2022-09-06");
+		assertThat(doc.select("#edRemoveDateTime").val()).isEqualTo("17:00");
 		assertThat(doc.select("#edDescription").val()).isEqualTo("user3 message 3a");
 	}
 

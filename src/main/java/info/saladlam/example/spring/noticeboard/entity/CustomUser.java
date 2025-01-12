@@ -31,12 +31,4 @@ public class CustomUser extends User {
 		return email;
 	}
 
-	@Override
-	public String toString() {
-		String parent = super.toString();
-		return parent.substring(0, parent.length() - 1) + ", " +
-				"Name=" + this.name + ", " +
-				"E-mail=" + this.email + "]";
-	}
-
 }

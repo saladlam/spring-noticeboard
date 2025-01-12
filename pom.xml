@@ -13,7 +13,7 @@
 
 	<groupId>info.saladlam.example</groupId>
 	<artifactId>spring-noticeboard</artifactId>
-	<version>0.2</version>
+	<version>0.21</version>
 	<name>spring-noticeboard</name>
 	<description>Spring boot example application: notice board</description>
 
@@ -78,8 +78,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<!-- problem on GeneratedKeyHolder on newer version -->
-			<version>1.4.200</version>
 			<scope>runtime</scope>
 		</dependency>
 

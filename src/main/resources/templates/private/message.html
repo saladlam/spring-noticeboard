@@ -8,22 +8,42 @@
 <body>
 <div class="ui container">
   <h4 th:text="${isEdit}? #{editMessage}: #{newMessage}"></h4>
-  <form th:action="@{/manage/__${postHandler}__}" method="post" th:object="${message}" class="ui form">
+  <form th:action="@{/manage/__${postHandler}__}" method="post" th:object="${message}" th:classappend="${#fields.hasErrors()}?error" class="ui form">
     <fieldset>
       <legend th:text="#{message}"></legend>
+      <div th:if="${#fields.hasErrors()}" th:classappend="${#fields.hasErrors()}?error" class="ui message">
+        <ul class="list">
+          <li th:each="error:${#fields.allErrors()}" th:text="${error}"></li>
+        </ul>
+      </div>
       <div class="field">
         <label th:text="#{message.publishDate}"></label>
-        <input id="edPublishDate" type="text" placeholder="DD-MM-YYYY HH:MM" th:field="*{publishDate}" />
+        <div class="two fields">
+          <div th:classappend="${#fields.hasErrors('publishDateDate')}?error" class="field">
+            <input id="edPublishDateDate" type="date" th:field="*{publishDateDate}" />
+          </div>
+          <div th:classappend="${#fields.hasErrors('publishDateTime')}?error" class="field">
+            <input id="edPublishDateTime" type="time" th:field="*{publishDateTime}" />
+          </div>
+        </div>
       </div>
       <div class="field">
         <label th:text="#{message.removeDate}"></label>
-        <input id="edRemoveDate" type="text" placeholder="DD-MM-YYYY HH:MM" th:field="*{removeDate}" />
+        <div th:classappend="${#fields.hasErrors('removeDate')}?error" class="two fields">
+          <div class="field">
+            <input id="edRemoveDateDate" type="date" th:field="*{removeDateDate}" />
+          </div>
+          <div class="field">
+            <input id="edRemoveDateTime" type="time" th:field="*{removeDateTime}" />
+          </div>
+        </div>
       </div>
-      <div class="field">
+      <div th:classappend="${#fields.hasErrors('description')}?error" class="field">
         <label th:text="#{message.description}"></label>
         <textarea id="edDescription" name="description" th:text="*{description}"></textarea>
       </div>
-      <button id="edSave" class="ui mini primary button" th:text="#{save}"> <i class="send icon"></i></button>
+      <button id="edSave" class="ui mini primary button">[[#{save}]] <i class="send icon"></i></button>
+      <button id="edCancel" type="button" class="ui mini button" onclick="document.location='../manage'; return false;">[[#{cancel}]] <i class="window close icon"></i></button>
     </fieldset>
   </form>
 </div>

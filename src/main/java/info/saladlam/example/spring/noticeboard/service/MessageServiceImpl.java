@@ -3,7 +3,6 @@ package info.saladlam.example.spring.noticeboard.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.github.dozermapper.core.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class MessageServiceImpl implements MessageService {
 			MessageDto to = mapper.map(from, MessageDto.class);
 			to.setStatus(MessageDto.PUBLISHED);
 			return to;
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
 			MessageDto to = mapper.map(from, MessageDto.class);
 			to.setStatus(MessageDto.WAITING_APPROVE);
 			return to;
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	@Override
@@ -58,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
 			MessageDto to = mapper.map(from, MessageDto.class);
 			this.updateStatus(to, time);
 			return to;
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	@Override
