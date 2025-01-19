@@ -3,13 +3,14 @@ package info.saladlam.example.spring.noticeboard.test;
 import javax.sql.DataSource;
 
 import info.saladlam.example.spring.noticeboard.entity.Message;
+import info.saladlam.example.spring.noticeboard.repository.JdbcMessageRepository;
 import info.saladlam.example.spring.noticeboard.support.Helper;
 import liquibase.integration.spring.SpringLiquibase;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@JdbcTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class MessageRepositoryTest {
@@ -41,6 +42,11 @@ class MessageRepositoryTest {
 			liquibase.setDataSource(dataSource);
 			liquibase.setDropFirst(true);
 			return liquibase;
+		}
+
+		@Bean
+		public MessageRepository messageRepository() {
+			return new JdbcMessageRepository();
 		}
 
 	}

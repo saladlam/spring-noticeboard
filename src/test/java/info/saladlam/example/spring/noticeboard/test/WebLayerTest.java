@@ -1,6 +1,7 @@
 package info.saladlam.example.spring.noticeboard.test;
 
 import info.saladlam.example.spring.noticeboard.service.ApplicationDateTimeService;
+import info.saladlam.example.spring.noticeboard.support.DatabaseTypeExcludeFilter;
 import info.saladlam.example.spring.noticeboard.support.Helper;
 import info.saladlam.example.spring.noticeboard.support.WithMockCustomUser;
 import liquibase.integration.spring.SpringLiquibase;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.filter.TypeExcludeFilters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -34,6 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@TypeExcludeFilters(DatabaseTypeExcludeFilter.class)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)

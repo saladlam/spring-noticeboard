@@ -1,11 +1,13 @@
 package info.saladlam.example.spring.noticeboard.test;
 
+import info.saladlam.example.spring.noticeboard.support.DatabaseTypeExcludeFilter;
 import info.saladlam.example.spring.noticeboard.support.Helper;
 import liquibase.integration.spring.SpringLiquibase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.filter.TypeExcludeFilters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@TypeExcludeFilters(DatabaseTypeExcludeFilter.class)
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class LoginTest {
