@@ -43,9 +43,17 @@
         <textarea id="edDescription" name="description" th:text="*{description}"></textarea>
       </div>
       <button id="edSave" class="ui mini primary button">[[#{save}]] <i class="send icon"></i></button>
-      <button id="edCancel" type="button" class="ui mini button" onclick="document.location='../manage'; return false;">[[#{cancel}]] <i class="window close icon"></i></button>
+      <button id="edCancel" type="button" class="ui mini button">[[#{cancel}]] <i class="window close icon"></i></button>
     </fieldset>
   </form>
 </div>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("edCancel").addEventListener("click", function() {
+      document.location = "../manage";
+      return false;
+    });
+  });
+</script>
 </body>
 </html>

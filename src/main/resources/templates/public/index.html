@@ -16,17 +16,19 @@
       <div th:if="${'en'.equals(#locale.language)}" class="item">
         <a th:href="@{/?lang=ja}" id="buChJa" class="ui green basic button" th:text="#{lang.ja}"></a>
       </div>
-      <div sec:authorize="!isAuthenticated()" class="item">
+      <div sec:authorize="isAnonymous()" class="item">
         <a th:href="@{/login}" id="buLogin" class="ui red basic button" th:text="#{login}"></a>
       </div>
-      <div sec:authorize="isAuthenticated()" class="item">
-        <a th:href="@{/manage}" id="buManage" class="ui red basic button" th:text="#{manage}"></a>
-      </div>
-      <div sec:authorize="isAuthenticated()" class="item">
-        <form th:action="@{/logout}" method="post">
-          <button class="ui red basic button" id="buLogout" th:text="#{logout}"></button>
-        </form>
-      </div>
+      <th:block sec:authorize="isAuthenticated()">
+        <div class="item">
+          <a th:href="@{/manage}" id="buManage" class="ui red basic button" th:text="#{manage}"></a>
+        </div>
+        <div class="item">
+          <form th:action="@{/logout}" method="post">
+            <button class="ui red basic button" id="buLogout" th:text="#{logout}"></button>
+          </form>
+        </div>
+      </th:block>
     </div>
   </div>
   <table class="ui celled table">

@@ -2,6 +2,7 @@ package info.saladlam.example.spring.noticeboard.config;
 
 import java.util.Locale;
 
+import info.saladlam.example.spring.noticeboard.framework.thymeleaf.CspNonceDialect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -25,6 +26,11 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 	@Bean
 	public Nl2brDialect dialect() {
 		return new Nl2brDialect();
+	}
+
+	@Bean
+	public CspNonceDialect cspNonceDialect() {
+		return new CspNonceDialect();
 	}
 
 	public LocaleChangeInterceptor localeChangeInterceptor() {

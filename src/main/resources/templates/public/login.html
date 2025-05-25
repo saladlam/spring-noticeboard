@@ -2,8 +2,9 @@
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
   <title th:text="|#{applicationName} - #{login}|"></title>
+  <meta charset="utf-8">
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
-  <style type="text/css">
+  <style>
     body {
       background-color: #DADADA;
     }
@@ -12,6 +13,9 @@
     }
     .column {
       max-width: 450px;
+    }
+    .error-block {
+      display: block !important;
     }
   </style>
 </head>
@@ -36,7 +40,7 @@
         </div>
         <button class="ui fluid large submit green button" th:text="#{login}"></button>
       </div>
-      <div th:if="${error == true and session.SPRING_SECURITY_LAST_EXCEPTION != null}" class="ui error message" style="display: block;">
+      <div th:if="${error == true and session.SPRING_SECURITY_LAST_EXCEPTION != null}" class="ui error message error-block">
         <div th:text="#{loginFailed}"></div>
         <div th:text="|#{reason}: ${session.SPRING_SECURITY_LAST_EXCEPTION.message}|"></div>
       </div>
